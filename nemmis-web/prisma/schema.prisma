@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum language_code {
+  es
+  en
+  ca
+}
+
+model Translation {
+  text_id       BigInt        @id @default(autoincrement())
+  language_code language_code
+  text          String        @db.Text
+
+  @@map("translations")
+}
+
+model Team {
+  id                  BigInt       @id @default(autoincrement())
+  title_text_id       BigInt
+  description_text_id BigInt
+  TeamMember          TeamMember[]
+
+  @@map("teams")
+}
+
+model TeamMember {
+  id       BigInt @id @default(autoincrement())
+  name     String @db.VarChar(20)
+  surname1 String @db.VarChar(50)
+  surname2 String @db.VarChar(50)
+  alias    String @db.VarChar(20)
+  team_id  BigInt
+  team     Team   @relation(fields: [team_id], references: [id])
+
+  @@map("team_members")
+}
