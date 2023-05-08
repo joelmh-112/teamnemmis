@@ -25,10 +25,11 @@ model Translation {
 }
 
 model Team {
-  id                  BigInt       @id @default(autoincrement())
+  id                  BigInt         @id @default(autoincrement())
   title_text_id       BigInt
   description_text_id BigInt
   TeamMember          TeamMember[]
+  TeamCategory        TeamCategory[]
 
   @@map("teams")
 }
@@ -43,4 +44,149 @@ model TeamMember {
   team     Team   @relation(fields: [team_id], references: [id])
 
   @@map("team_members")
+}
+
+model Event {
+  id                  BigInt          @id @default(autoincrement())
+  title_text_id       BigInt
+  description_text_id BigInt
+  date                DateTime
+  EventCategory       EventCategory[]
+
+  @@map("events")
+}
+
+model Post {
+  id            BigInt         @id @default(autoincrement())
+  title_text_id BigInt
+  body_text_id  BigInt
+  link          String
+
+  PostCategory  PostCategory[]
+
+  @@map("posts")
+}
+
+model Category {
+  id                  BigInt @id @default(autoincrement())
+  title_text_id       BigInt
+  description_text_id BigInt
+
+  TeamCategory  TeamCategory[]
+  EventCategory EventCategory[]
+  PostCategory  PostCategory[]
+
+  @@map("categories")
+}
+
+model TeamCategory {
+  id          BigInt @id @default(autoincrement())
+  team_id     BigInt
+  category_id BigInt
+
+  team     Team     @relation(fields: [team_id], references: [id])
+  category Category @relation(fields: [category_id], references: [id])
+
+  @@map("team_categories")
+}
+
+model EventCategory {
+  id          BigInt   @id @default(autoincrement())
+  event_id    BigInt
+  category_id BigInt
+  event       Event    @relation(fields: [event_id], references: [id])
+  category    Category @relation(fields: [category_id], references: [id])
+
+  @@map("event_categories")
+}
+
+model PostCategory {
+  id          BigInt   @id @default(autoincrement())
+  post_id     BigInt
+  category_id BigInt
+  post        Post     @relation(fields: [post_id], references: [id])
+  category    Category @relation(fields: [category_id], references: [id])
+
+  @@map("post_categories")
+}
+
+model User{
+
+  id           BigInt @id @default(autoincrement())
+  google_uuid  String @db.VarChar(50)
+  twitch_uuid  String @db.VarChar(50)
+  discord_uuid String @db.VarChar(50)
+  nickname     String @db.VarChar(25) @unique
+
+  UserRoles UserRole[]
+  Winner    Winner[]
+
+  @@map("users")
+}
+
+model Role{
+  id   BigInt @id @default(autoincrement())
+  name String @db.VarChar(25)
+
+  UserRoles UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole{
+  id      BigInt @id @default(autoincrement())
+  user_id BigInt
+  role_id BigInt
+
+  user User @relation(fields: [user_id], references: [id])
+  role Role @relation(fields: [role_id], references: [id])
+
+  @@map("user_roles")
+}
+
+model Giveaway{
+  id         BigInt   @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  start_date DateTime
+  due_date   DateTime
+
+  GiveawayAward GiveawayAward[]
+
+  @@map("giveaways")
+}
+
+model Award{
+  // id bigInt() autoIncrement PK,
+	// name varchar(255),
+
+  id   BigInt @id @default(autoincrement())
+  name String @db.VarChar(255)
+
+  GiveawayAward GiveawayAward[]
+
+  @@map("awards")
+}
+
+model GiveawayAward{
+  id         BigInt @id @default(autoincrement())
+  giveaway_id BigInt
+  award_id    BigInt
+
+  giveaway Giveaway @relation(fields: [giveaway_id], references: [id])
+  award    Award    @relation(fields: [award_id], references: [id])
+
+  Winner Winner[]
+
+  @@map("giveaway_awards")
+}
+
+model Winner{
+  id           BigInt @id @default(autoincrement())
+  giveaway_award_id  BigInt
+  user_id      BigInt
+
+  giveaway_award GiveawayAward @relation(fields: [giveaway_award_id], references: [id])
+  user           User          @relation(fields: [user_id], references: [id])
+
+  @@map("winners")
 }
