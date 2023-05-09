@@ -1,0 +1,8 @@
+{
+    "pages":{
+        "test":{
+            "title":"Test",
+            "content":"<p>Test</p>"
+        }
+    }
+}
