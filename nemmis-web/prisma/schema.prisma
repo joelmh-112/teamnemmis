@@ -57,12 +57,12 @@ model Event {
 }
 
 model Post {
-  id            BigInt         @id @default(autoincrement())
+  id            BigInt @id @default(autoincrement())
   title_text_id BigInt
   body_text_id  BigInt
   link          String
 
-  PostCategory  PostCategory[]
+  PostCategory PostCategory[]
 
   @@map("posts")
 }
@@ -110,13 +110,14 @@ model PostCategory {
   @@map("post_categories")
 }
 
-model User{
-
-  id           BigInt @id @default(autoincrement())
-  google_uuid  String @db.VarChar(50)
-  twitch_uuid  String @db.VarChar(50)
-  discord_uuid String @db.VarChar(50)
-  nickname     String @db.VarChar(25) @unique
+model User {
+  id           String  @id @default(cuid())
+  google_uuid  String? @db.VarChar(50)
+  twitch_uuid  String? @db.VarChar(50)
+  discord_uuid String? @db.VarChar(50)
+  email        String  @db.VarChar(255)
+  avatar       String  @db.Text
+  nickname     String  @db.VarChar(25)
 
   UserRoles UserRole[]
   Winner    Winner[]
@@ -124,7 +125,7 @@ model User{
   @@map("users")
 }
 
-model Role{
+model Role {
   id   BigInt @id @default(autoincrement())
   name String @db.VarChar(25)
 
@@ -133,9 +134,9 @@ model Role{
   @@map("roles")
 }
 
-model UserRole{
+model UserRole {
   id      BigInt @id @default(autoincrement())
-  user_id BigInt
+  user_id String
   role_id BigInt
 
   user User @relation(fields: [user_id], references: [id])
@@ -144,7 +145,7 @@ model UserRole{
   @@map("user_roles")
 }
 
-model Giveaway{
+model Giveaway {
   id         BigInt   @id @default(autoincrement())
   name       String   @db.VarChar(255)
   start_date DateTime
@@ -155,9 +156,9 @@ model Giveaway{
   @@map("giveaways")
 }
 
-model Award{
+model Award {
   // id bigInt() autoIncrement PK,
-	// name varchar(255),
+  // name varchar(255),
 
   id   BigInt @id @default(autoincrement())
   name String @db.VarChar(255)
@@ -167,8 +168,8 @@ model Award{
   @@map("awards")
 }
 
-model GiveawayAward{
-  id         BigInt @id @default(autoincrement())
+model GiveawayAward {
+  id          BigInt @id @default(autoincrement())
   giveaway_id BigInt
   award_id    BigInt
 
@@ -180,10 +181,10 @@ model GiveawayAward{
   @@map("giveaway_awards")
 }
 
-model Winner{
-  id           BigInt @id @default(autoincrement())
-  giveaway_award_id  BigInt
-  user_id      BigInt
+model Winner {
+  id                BigInt @id @default(autoincrement())
+  giveaway_award_id BigInt
+  user_id           String
 
   giveaway_award GiveawayAward @relation(fields: [giveaway_award_id], references: [id])
   user           User          @relation(fields: [user_id], references: [id])
