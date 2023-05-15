@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,12 +5,6 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-}
-
-enum language_code {
-  es
-  en
-  ca
 }
 
 model Translation {
@@ -28,8 +19,8 @@ model Team {
   id                  BigInt         @id @default(autoincrement())
   title_text_id       BigInt
   description_text_id BigInt
-  TeamMember          TeamMember[]
   TeamCategory        TeamCategory[]
+  TeamMember          TeamMember[]
 
   @@map("teams")
 }
@@ -43,6 +34,7 @@ model TeamMember {
   team_id  BigInt
   team     Team   @relation(fields: [team_id], references: [id])
 
+  @@index([team_id], map: "team_members_team_id_fkey")
   @@map("team_members")
 }
 
@@ -57,36 +49,35 @@ model Event {
 }
 
 model Post {
-  id            BigInt @id @default(autoincrement())
+  id            BigInt         @id @default(autoincrement())
   title_text_id BigInt
   body_text_id  BigInt
   link          String
-
-  PostCategory PostCategory[]
+  PostCategory  PostCategory[]
 
   @@map("posts")
 }
 
 model Category {
-  id                  BigInt @id @default(autoincrement())
+  id                  BigInt          @id @default(autoincrement())
   title_text_id       BigInt
   description_text_id BigInt
-
-  TeamCategory  TeamCategory[]
-  EventCategory EventCategory[]
-  PostCategory  PostCategory[]
+  EventCategory       EventCategory[]
+  PostCategory        PostCategory[]
+  TeamCategory        TeamCategory[]
 
   @@map("categories")
 }
 
 model TeamCategory {
-  id          BigInt @id @default(autoincrement())
+  id          BigInt   @id @default(autoincrement())
   team_id     BigInt
   category_id BigInt
+  category    Category @relation(fields: [category_id], references: [id])
+  team        Team     @relation(fields: [team_id], references: [id])
 
-  team     Team     @relation(fields: [team_id], references: [id])
-  category Category @relation(fields: [category_id], references: [id])
-
+  @@index([category_id], map: "team_categories_category_id_fkey")
+  @@index([team_id], map: "team_categories_team_id_fkey")
   @@map("team_categories")
 }
 
@@ -94,9 +85,11 @@ model EventCategory {
   id          BigInt   @id @default(autoincrement())
   event_id    BigInt
   category_id BigInt
-  event       Event    @relation(fields: [event_id], references: [id])
   category    Category @relation(fields: [category_id], references: [id])
+  event       Event    @relation(fields: [event_id], references: [id])
 
+  @@index([category_id], map: "event_categories_category_id_fkey")
+  @@index([event_id], map: "event_categories_event_id_fkey")
   @@map("event_categories")
 }
 
@@ -104,90 +97,93 @@ model PostCategory {
   id          BigInt   @id @default(autoincrement())
   post_id     BigInt
   category_id BigInt
-  post        Post     @relation(fields: [post_id], references: [id])
   category    Category @relation(fields: [category_id], references: [id])
+  post        Post     @relation(fields: [post_id], references: [id])
 
+  @@index([category_id], map: "post_categories_category_id_fkey")
+  @@index([post_id], map: "post_categories_post_id_fkey")
   @@map("post_categories")
 }
 
 model User {
-  id           String  @id @default(cuid())
-  google_uuid  String? @db.VarChar(50)
-  twitch_uuid  String? @db.VarChar(50)
-  discord_uuid String? @db.VarChar(50)
-  email        String  @db.VarChar(255)
-  avatar       String  @db.Text
-  nickname     String  @db.VarChar(25)
-
-  UserRoles UserRole[]
-  Winner    Winner[]
+  id           String     @id @default(cuid())
+  google_uuid  String?    @db.VarChar(50)
+  twitch_uuid  String?    @db.VarChar(50)
+  discord_uuid String?    @db.VarChar(50)
+  nickname     String     @db.VarChar(25)
+  email        String     @db.VarChar(255)
+  avatar       String     @db.Text
+  UserRoles    UserRole[]
+  Winner       Winner[]
 
   @@map("users")
 }
 
 model Role {
-  id   Int @id @default(autoincrement())
-  name String @db.VarChar(25)
-
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(25)
   UserRoles UserRole[]
 
   @@map("roles")
 }
 
 model UserRole {
-  id      Int @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   user_id String
   role_id Int
+  role    Role   @relation(fields: [role_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id])
 
-  user User @relation(fields: [user_id], references: [id])
-  role Role @relation(fields: [role_id], references: [id])
-
+  @@index([role_id], map: "user_roles_role_id_fkey")
+  @@index([user_id], map: "user_roles_user_id_fkey")
   @@map("user_roles")
 }
 
 model Giveaway {
-  id         BigInt   @id @default(autoincrement())
-  name       String   @db.VarChar(255)
-  start_date DateTime
-  due_date   DateTime
-
+  id            BigInt          @id @default(autoincrement())
+  name          String          @db.VarChar(255)
+  start_date    DateTime
+  due_date      DateTime
   GiveawayAward GiveawayAward[]
 
   @@map("giveaways")
 }
 
 model Award {
-  // id bigInt() autoIncrement PK,
-  // name varchar(255),
-
-  id   BigInt @id @default(autoincrement())
-  name String @db.VarChar(255)
-
+  id            BigInt          @id @default(autoincrement())
+  name          String          @db.VarChar(255)
   GiveawayAward GiveawayAward[]
 
   @@map("awards")
 }
 
 model GiveawayAward {
-  id          BigInt @id @default(autoincrement())
+  id          BigInt   @id @default(autoincrement())
   giveaway_id BigInt
   award_id    BigInt
+  award       Award    @relation(fields: [award_id], references: [id])
+  giveaway    Giveaway @relation(fields: [giveaway_id], references: [id])
+  Winner      Winner[]
 
-  giveaway Giveaway @relation(fields: [giveaway_id], references: [id])
-  award    Award    @relation(fields: [award_id], references: [id])
-
-  Winner Winner[]
-
+  @@index([award_id], map: "giveaway_awards_award_id_fkey")
+  @@index([giveaway_id], map: "giveaway_awards_giveaway_id_fkey")
   @@map("giveaway_awards")
 }
 
 model Winner {
-  id                BigInt @id @default(autoincrement())
+  id                BigInt        @id @default(autoincrement())
   giveaway_award_id BigInt
   user_id           String
+  giveaway_award    GiveawayAward @relation(fields: [giveaway_award_id], references: [id])
+  user              User          @relation(fields: [user_id], references: [id])
 
-  giveaway_award GiveawayAward @relation(fields: [giveaway_award_id], references: [id])
-  user           User          @relation(fields: [user_id], references: [id])
-
+  @@index([giveaway_award_id], map: "winners_giveaway_award_id_fkey")
+  @@index([user_id], map: "winners_user_id_fkey")
   @@map("winners")
+}
+
+enum language_code {
+  es
+  en
+  ca
 }
