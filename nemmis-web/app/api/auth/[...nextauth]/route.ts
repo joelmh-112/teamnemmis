@@ -6,6 +6,7 @@ import TwitchProvider from "next-auth/providers/twitch";
 import prisma from "@/utils/prisma";
 
 const handler = NextAuth({
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     maxAge: 24 * 60 * 60,
   },
@@ -33,11 +34,14 @@ const handler = NextAuth({
   callbacks: {
     async signIn({ user, account,profile }: any) {
       
-      let provider_id = "discord_uuid";
+      let provider_id = "";
 
       let dbUser:User|null = await prisma.user.findFirst({
         where: {
           email: user.email
+        },
+        include: {
+          UserRoles: true,
         },
       });
 
