@@ -1,1 +1,8 @@
-{}
+{
+    "pages":{
+        "test":{
+            "title":"TestEN",
+            "content":"<p>Test</p>"
+        }
+    }
+}
