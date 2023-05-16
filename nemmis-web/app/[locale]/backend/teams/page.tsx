@@ -1,7 +1,8 @@
-import { Table } from "@/components/tableComponent/Table";
+import { IColumnType, Table } from "@/components/tableComponent/Table";
 import { PrismaClient } from "@prisma/client";
 
 import "../../../css/table.css";
+import { ColumnType } from "@/utils/ColumnType";
 
 interface MyTeams {
   id: string;
@@ -12,34 +13,33 @@ interface MyTeams {
 export default async function Index() {
   const teams = await getData();
 
-  return <Table components={teams}></Table>;
+  const columns: IColumnType[] = [
+    { key: "id", title: "ID", type: ColumnType.bigint },
+    { key: "Title", title: "Título", type: ColumnType.Text },
+    { key: "Description", title: "Descripción", type: ColumnType.Text },
+    { key: "TeamMember", title: "Miembros", type: ColumnType.array },
+    { key: "TeamCategory", title: "Categorías", type: ColumnType.array },
+  ];
+  return <Table columns={columns} data={teams}></Table>;
 }
 
 async function getData() {
   const prisma = new PrismaClient();
-  const teams = await prisma.team.findMany();
-  const aux: MyTeams[] = await Promise.all(
-    teams.map(async (e) => {
-      const description = (
-        await prisma.translation.findFirst({
-          where: { text_id: e.description_text_id },
-          select: { text: true },
-        })
-      )?.text;
-      const title = (
-        await prisma.translation.findFirst({
-          where: { text_id: e.title_text_id },
-          select: { text: true },
-        })
-      )?.text;
-      const aux: MyTeams = {
-        id: e.id.toString(),
-        description,
-        title,
-      };
+  return await prisma.team.findMany({
+    include: {
+      Title: {
+        include: {
+          Translations: true,
+        },
+      },
+      Description: {
+        include: {
+          Translations: true,
+        },
+      },
+      TeamMember: true,
+      TeamCategory: true,
+    },
 
-      return aux;
-    })
-  );
-  return aux;
+  });
 }

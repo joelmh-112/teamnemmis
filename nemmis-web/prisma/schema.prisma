@@ -22,6 +22,8 @@ model Text {
   translation_id   BigInt
   EventDescription Event[]       @relation("eventDescription")
   EventTitle       Event[]       @relation("eventTitle")
+  TeamDescription  Team[]        @relation("teamDescription")
+  TeamTitle        Team[]        @relation("teamTitle")
   Translations     Translation[]
 
   @@map("texts")
@@ -33,6 +35,9 @@ model Team {
   description_text_id BigInt
   TeamCategory        TeamCategory[]
   TeamMember          TeamMember[]
+
+  Description Text @relation("teamDescription", fields: [description_text_id], references: [id])
+  Title       Text @relation("teamTitle", fields: [title_text_id], references: [id])
 
   @@map("teams")
 }
