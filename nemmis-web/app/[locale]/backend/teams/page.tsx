@@ -1,4 +1,4 @@
-import { Table } from "@/components/Table";
+import { Table } from "@/components/tableComponent/Table";
 import { PrismaClient } from "@prisma/client";
 
 import "../../../css/table.css";

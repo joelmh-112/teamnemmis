@@ -8,11 +8,24 @@ datasource db {
 }
 
 model Translation {
-  text_id       BigInt        @id @default(autoincrement())
+  text_id       BigInt
   language_code language_code
   text          String        @db.Text
+  Text          Text          @relation(fields: [text_id], references: [id])
 
+  @@id([text_id, language_code])
   @@map("translations")
+}
+
+model Text {
+  id             BigInt        @id @default(autoincrement())
+  translation_id BigInt
+  Translations   Translation[]
+
+  EventTitle       Event[] @relation("eventTitle")
+  EventDescription Event[] @relation("eventDescription")
+
+  @@map("texts")
 }
 
 model Team {
@@ -39,11 +52,15 @@ model TeamMember {
 }
 
 model Event {
-  id                  BigInt          @id @default(autoincrement())
+  id                  BigInt   @id @default(autoincrement())
   title_text_id       BigInt
   description_text_id BigInt
   date                DateTime
-  EventCategory       EventCategory[]
+
+  Title       Text @relation("eventTitle", fields: [title_text_id], references: [id])
+  Description Text @relation("eventDescription", fields: [description_text_id], references: [id])
+
+  EventCategory EventCategory[]
 
   @@map("events")
 }

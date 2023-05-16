@@ -1,22 +1,31 @@
 "use client";
 
+import { Translation } from "@prisma/client";
 import { useEffect, useState } from "react";
 
-type Props = {
-  components: any[];
-};
+export interface IColumnType<T> {
+  key: string;
+  title: string;
+  width?: number;
+  popup?: boolean;
+}
 
-export const Table = ({ components }: Props) => {
-  const [columns, setColumns] = useState<any[]>([]);
+interface Props<T> {
+  data: T[];
+  columns: IColumnType<T>[];
+}
+
+export function Table<T>({ data, columns }: Props<T>) {
+  const [components, setComponents] = useState<any[]>([]);
   useEffect(() => {
-    components && setColumns(Object.keys(components[0]));
+    components && setComponents(Object.keys(components[0]));
   }, [components]);
 
   return (
     <table>
       <thead>
         <tr>
-          {columns.map((e) => (
+          {components.map((e) => (
             <th key={e}> {e}</th>
           ))}
         </tr>
@@ -25,7 +34,7 @@ export const Table = ({ components }: Props) => {
         {components.map((e) => {
           return (
             <tr key={e.id || "noID"}>
-              {columns.map((f: any) => (
+              {components.map((f: any) => (
                 <td key={f || "noID"}>{e[f]}</td>
               ))}
             </tr>
@@ -34,4 +43,4 @@ export const Table = ({ components }: Props) => {
       </tbody>
     </table>
   );
-};
+}
