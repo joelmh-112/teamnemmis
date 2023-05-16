@@ -18,12 +18,11 @@ model Translation {
 }
 
 model Text {
-  id             BigInt        @id @default(autoincrement())
-  translation_id BigInt
-  Translations   Translation[]
-
-  EventTitle       Event[] @relation("eventTitle")
-  EventDescription Event[] @relation("eventDescription")
+  id               BigInt        @id @default(autoincrement())
+  translation_id   BigInt
+  EventDescription Event[]       @relation("eventDescription")
+  EventTitle       Event[]       @relation("eventTitle")
+  Translations     Translation[]
 
   @@map("texts")
 }
@@ -52,16 +51,16 @@ model TeamMember {
 }
 
 model Event {
-  id                  BigInt   @id @default(autoincrement())
+  id                  BigInt          @id @default(autoincrement())
   title_text_id       BigInt
   description_text_id BigInt
   date                DateTime
+  EventCategory       EventCategory[]
+  Description         Text            @relation("eventDescription", fields: [description_text_id], references: [id])
+  Title               Text            @relation("eventTitle", fields: [title_text_id], references: [id])
 
-  Title       Text @relation("eventTitle", fields: [title_text_id], references: [id])
-  Description Text @relation("eventDescription", fields: [description_text_id], references: [id])
-
-  EventCategory EventCategory[]
-
+  @@index([description_text_id], map: "events_description_text_id_fkey")
+  @@index([title_text_id], map: "events_title_text_id_fkey")
   @@map("events")
 }
 

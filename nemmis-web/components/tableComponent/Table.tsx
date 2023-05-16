@@ -1,45 +1,41 @@
 "use client";
-
-import { Translation } from "@prisma/client";
 import { useEffect, useState } from "react";
+import RowColumnData from "./RowData";
+import { ColumnType } from "@/utils/ColumnType";
 
-export interface IColumnType<T> {
+
+export interface IColumnType {
   key: string;
   title: string;
-  width?: number;
   popup?: boolean;
+  type: ColumnType;
 }
 
-interface Props<T> {
-  data: T[];
-  columns: IColumnType<T>[];
+interface Props {
+  columns: IColumnType[];
+  data: any[];
 }
 
-export function Table<T>({ data, columns }: Props<T>) {
-  const [components, setComponents] = useState<any[]>([]);
-  useEffect(() => {
-    components && setComponents(Object.keys(components[0]));
-  }, [components]);
+export function Table({ data,columns }: Props) {  
 
   return (
     <table>
       <thead>
         <tr>
-          {components.map((e) => (
-            <th key={e}> {e}</th>
+          {columns.map((column) => (
+            <th key={column.key} className="capitalize">{column.title}</th>
           ))}
         </tr>
+
       </thead>
       <tbody>
-        {components.map((e) => {
-          return (
-            <tr key={e.id || "noID"}>
-              {components.map((f: any) => (
-                <td key={f || "noID"}>{e[f]}</td>
-              ))}
-            </tr>
-          );
-        })}
+        {data.map((row, index) => (
+          <tr key={index}>
+            {columns.map((column) => (
+              <RowColumnData key={column.key} data={row[column.key]} type={column.type} />
+            ))}
+          </tr>
+        ))}
       </tbody>
     </table>
   );
