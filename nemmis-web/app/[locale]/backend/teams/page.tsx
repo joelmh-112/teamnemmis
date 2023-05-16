@@ -1,26 +1,25 @@
 import { Table } from "@/components/Table";
-import { PrismaClient, Translation } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 import "../../../css/table.css";
 
-interface MyEvent {
+interface MyTeams {
   id: string;
   title: string | undefined;
   description: string | undefined;
-  date: string;
 }
 
 export default async function Index() {
-  const events = await getData();
+  const teams = await getData();
 
-  return <Table components={events}></Table>;
+  return <Table components={teams}></Table>;
 }
 
 async function getData() {
   const prisma = new PrismaClient();
-  const events = await prisma.event.findMany();
-  const aux: MyEvent[] = await Promise.all(
-    events.map(async (e) => {
+  const teams = await prisma.team.findMany();
+  const aux: MyTeams[] = await Promise.all(
+    teams.map(async (e) => {
       const description = (
         await prisma.translation.findFirst({
           where: { text_id: e.description_text_id },
@@ -33,9 +32,8 @@ async function getData() {
           select: { text: true },
         })
       )?.text;
-      const aux: MyEvent = {
+      const aux: MyTeams = {
         id: e.id.toString(),
-        date: e.date.toString(),
         description,
         title,
       };
