@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { ColumnType } from "@/utils/ColumnType";
 import { Text, Translation } from "@prisma/client";
+import Link from "next/link";
 
 interface Props {
   data: any;
@@ -28,7 +29,9 @@ function RowColumnData({ data, type }: Props) {
       case ColumnType.date:
         const dateTry = new Date(data);
         if (dateTry.toString() !== "Invalid Date") {
-          parsedData = `${dateTry.getDate()}/${dateTry.getMonth() + 1}/${dateTry.getFullYear()} ${dateTry.getHours()}:${dateTry.getMinutes()}`;
+          parsedData = `${dateTry.getDate()}/${
+            dateTry.getMonth() + 1
+          }/${dateTry.getFullYear()} ${dateTry.getHours()}:${dateTry.getMinutes()}`;
           break;
         }
         parsedData = "Invalid Date";
@@ -46,6 +49,13 @@ function RowColumnData({ data, type }: Props) {
       case ColumnType.array:
         parsedData = data.length;
         break;
+      case ColumnType.link:
+        parsedData = (
+          <Link href={data}>
+            {data.substring(0, 20)}
+            {data.length > 20 && "..."}
+          </Link>
+        );
       default:
         parsedData = data ? data.toString() : "";
         break;

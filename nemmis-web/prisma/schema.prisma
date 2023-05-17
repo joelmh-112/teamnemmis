@@ -27,6 +27,8 @@ model Text {
   EventTitle          Event[]       @relation("eventTitle")
   TeamDescription     Team[]        @relation("teamDescription")
   TeamTitle           Team[]        @relation("teamTitle")
+  PostDescription     Post[]        @relation("postDescription")
+  PostTitle           Post[]        @relation("postTitle")
   Translations        Translation[]
 
   @@map("texts")
@@ -79,6 +81,9 @@ model Post {
   body_text_id  BigInt
   link          String
   PostCategory  PostCategory[]
+
+  Description Text @relation("postDescription", fields: [body_text_id], references: [id])
+  Title       Text @relation("postTitle", fields: [title_text_id], references: [id])
 
   @@map("posts")
 }
