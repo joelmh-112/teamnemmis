@@ -1,4 +1,4 @@
-import { IColumnType, Table } from "@/components/tableComponent/Table";
+import { IColumnType, Table } from "@/components/backend/tableComponent/Table";
 import { PrismaClient } from "@prisma/client";
 
 import "../../../css/table.css";

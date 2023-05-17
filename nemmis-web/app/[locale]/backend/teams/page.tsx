@@ -1,8 +1,10 @@
-import { IColumnType, Table } from "@/components/tableComponent/Table";
+import { IColumnType, Table } from "@/components/backend/tableComponent/Table";
 import { PrismaClient } from "@prisma/client";
 
 import "../../../css/table.css";
 import { ColumnType } from "@/utils/ColumnType";
+import Layout from "@/components/backend/Layout";
+import Show from "@/components/backend/Show";
 
 interface MyTeams {
   id: string;
@@ -16,11 +18,17 @@ export default async function Index() {
   const columns: IColumnType[] = [
     { key: "id", title: "ID", type: ColumnType.bigint },
     { key: "Title", title: "Título", type: ColumnType.Text },
-    { key: "Description", title: "Descripción", type: ColumnType.text },
+    { key: "Description", title: "Descripción", type: ColumnType.Text },
     { key: "TeamMember", title: "Miembros", type: ColumnType.array },
     { key: "TeamCategory", title: "Categorías", type: ColumnType.array },
   ];
-  return <Table columns={columns} data={teams}></Table>;
+  return (
+    <Layout>
+      <Show title="Equipos">
+        <Table columns={columns} data={teams}></Table>
+      </Show>
+    </Layout>
+  );
 }
 
 async function getData() {
