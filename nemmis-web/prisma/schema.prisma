@@ -25,6 +25,7 @@ model Text {
   EventTitle          Event[]       @relation("eventTitle")
   TeamDescription     Team[]        @relation("teamDescription")
   TeamTitle           Team[]        @relation("teamTitle")
+  AwardName           Award[]       @relation("awardName")
   CategoryDescription Category[]    @relation("categoryDescription")
   CategoryTitle       Category[]    @relation("categoryTitle")
   Translations        Translation[]
@@ -180,8 +181,7 @@ model Giveaway {
 
 model Award {
   id            BigInt          @id @default(autoincrement())
-  name_id       BigInt
-  texts         Text            @relation(fields: [name_id], references: [id])
+  name          String          @db.VarChar(255)
   GiveawayAward GiveawayAward[]
 
   @@index([name_id], map: "awards_name_id_fkey")
