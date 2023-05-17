@@ -20,14 +20,13 @@ model Translation {
 model Text {
   id                  BigInt        @id @default(autoincrement())
   translation_id      BigInt
-  awards              Award[]
+  AwardName           Award[]       @relation("awardName")
+  CategoryDescription Category[]    @relation("categoryDescription")
+  CategoryTitle       Category[]    @relation("categoryTitle")
   EventDescription    Event[]       @relation("eventDescription")
   EventTitle          Event[]       @relation("eventTitle")
   TeamDescription     Team[]        @relation("teamDescription")
   TeamTitle           Team[]        @relation("teamTitle")
-  AwardName           Award[]       @relation("awardName")
-  CategoryDescription Category[]    @relation("categoryDescription")
-  CategoryTitle       Category[]    @relation("categoryTitle")
   Translations        Translation[]
 
   @@map("texts")
@@ -85,17 +84,17 @@ model Post {
 }
 
 model Category {
-  id                  BigInt @id @default(autoincrement())
+  id                  BigInt          @id @default(autoincrement())
   title_text_id       BigInt
   description_text_id BigInt
+  Description         Text            @relation("categoryDescription", fields: [description_text_id], references: [id])
+  Title               Text            @relation("categoryTitle", fields: [title_text_id], references: [id])
+  EventCategory       EventCategory[]
+  PostCategory        PostCategory[]
+  TeamCategory        TeamCategory[]
 
-  Description Text @relation("categoryDescription", fields: [description_text_id], references: [id])
-  Title       Text @relation("categoryTitle", fields: [title_text_id], references: [id])
-
-  EventCategory EventCategory[]
-  PostCategory  PostCategory[]
-  TeamCategory  TeamCategory[]
-
+  @@index([description_text_id], map: "categories_description_text_id_fkey")
+  @@index([title_text_id], map: "categories_title_text_id_fkey")
   @@map("categories")
 }
 
@@ -181,7 +180,8 @@ model Giveaway {
 
 model Award {
   id            BigInt          @id @default(autoincrement())
-  name          String          @db.VarChar(255)
+  name_id       BigInt
+  Name          Text            @relation("awardName", fields: [name_id], references: [id])
   GiveawayAward GiveawayAward[]
 
   @@index([name_id], map: "awards_name_id_fkey")
