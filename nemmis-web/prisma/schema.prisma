@@ -30,6 +30,7 @@ model Text {
   PostDescription     Post[]        @relation("postDescription")
   PostTitle           Post[]        @relation("postTitle")
   Translations        Translation[]
+  GiveawayName        Giveaway[]    @relation("giveawayName")
 
   @@map("texts")
 }
@@ -175,9 +176,11 @@ model UserRole {
 
 model Giveaway {
   id            BigInt          @id @default(autoincrement())
-  name          String          @db.VarChar(255)
+  name_id          BigInt
   start_date    DateTime
   due_date      DateTime
+
+  Name          Text            @relation("giveawayName", fields: [name_id], references: [id])
   GiveawayAward GiveawayAward[]
 
   @@map("giveaways")
