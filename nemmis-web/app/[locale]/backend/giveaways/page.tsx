@@ -10,6 +10,8 @@ export default async function Index() {
   const columns: IColumnType[] = [
     { key: "id", title: "ID", type: ColumnType.bigint },
     { key: "Name", title: "Nombre", type: ColumnType.Text },
+    { key: "start_date", title: "Inicio", type: ColumnType.date },
+    { key: "due_date", title: "Fin", type: ColumnType.date },
     { key:"GiveawayAward", title: "Sorteos", type: ColumnType.array },
 
   ];
@@ -18,7 +20,7 @@ export default async function Index() {
 
 async function getData() {
   const prisma = new PrismaClient();
-  return await prisma.award.findMany({
+  return await prisma.giveaway.findMany({
     include: {
       Name: {
         include: {
