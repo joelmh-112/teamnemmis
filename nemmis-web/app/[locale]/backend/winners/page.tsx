@@ -9,24 +9,21 @@ export default async function Index() {
 
   const columns: IColumnType[] = [
     { key: "id", title: "ID", type: ColumnType.bigint },
-    { key: "Name", title: "Nombre", type: ColumnType.Text },
-    { key: "start_date", title: "Inicio", type: ColumnType.date },
-    { key: "due_date", title: "Fin", type: ColumnType.date },
-    { key: "GiveawayAward", title: "Premios", type: ColumnType.array },
+    { key:"giveaway_award", title: "Roles", type: ColumnType.array },
+    { key:"user", title: "User", type: ColumnType.array },
+
   ];
   return <Table columns={columns} data={teams}></Table>;
 }
 
 async function getData() {
   const prisma = new PrismaClient();
-  return await prisma.giveaway.findMany({
+  return await prisma.winner.findMany({
     include: {
-      Name: {
-        include: {
-          Translations: true,
-        },
-      },
-      GiveawayAward: true,
+      giveaway_award: true,
+      user: true,
+      
     },
+
   });
 }
