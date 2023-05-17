@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import "../../../css/table.css";
 import { ColumnType } from "@/utils/ColumnType";
 import Layout from "@/components/backend/Layout";
-import Show from "@/components/backend/Show";
+import Show from "@/components/backend/ModelTemplate";
 
 interface MyTeams {
   id: string;
