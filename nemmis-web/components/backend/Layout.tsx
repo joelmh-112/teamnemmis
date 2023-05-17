@@ -1,8 +1,17 @@
 import { ReactNode } from "react";
-import Menu from "@/components/backend/Menu";
+import Sidebar from "./Sidebar";
+import Menu from "./Menu";
 
 function Layout({ children }: { children: ReactNode }) {
-  return <div><Menu/>{children}</div>;
+  return (
+    <main className="flex">
+      <Sidebar />
+      <div className="w-full">
+        <Menu />
+        {children}
+      </div>
+    </main>
+  );
 }
 
 export default Layout;

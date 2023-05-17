@@ -1,10 +1,10 @@
-import { IColumnType, Table } from "@/components/backend/tableComponent/Table";
+import { IColumnType, Table } from "@components/backend/tableComponent/Table";
 import { PrismaClient } from "@prisma/client";
 
 import "../../../css/table.css";
-import { ColumnType } from "@/utils/ColumnType";
-import Layout from "@/components/backend/Layout";
-import Show from "@/components/backend/Show";
+import { ColumnType } from "@utils/ColumnType";
+import Layout from "@components/backend/Layout";
+import Show from "@components/backend/Show";
 
 interface MyTeams {
   id: string;

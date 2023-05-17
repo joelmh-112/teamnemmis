@@ -8,10 +8,11 @@ interface Props {
 function Show(props: Props) {
   const { title, children } = props;
   return (
-    <>
+    <div className="p-4">
       <h1>{title}</h1>
+      <br/>
       {children}
-    </>
+    </div>
   );
 }
 
