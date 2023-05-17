@@ -10,8 +10,7 @@ export default async function Index() {
   const columns: IColumnType[] = [
     { key: "id", title: "ID", type: ColumnType.bigint },
     { key: "Name", title: "Nombre", type: ColumnType.Text },
-    { key:"GiveawayAward", title: "Sorteos", type: ColumnType.array },
-
+    { key: "GiveawayAward", title: "Sorteos", type: ColumnType.array },
   ];
   return <Table columns={columns} data={teams}></Table>;
 }
@@ -27,6 +26,5 @@ async function getData() {
       },
       GiveawayAward: true,
     },
-
   });
 }

@@ -25,12 +25,12 @@ model Text {
   CategoryTitle       Category[]    @relation("categoryTitle")
   EventDescription    Event[]       @relation("eventDescription")
   EventTitle          Event[]       @relation("eventTitle")
-  TeamDescription     Team[]        @relation("teamDescription")
-  TeamTitle           Team[]        @relation("teamTitle")
+  GiveawayName        Giveaway[]    @relation("giveawayName")
   PostDescription     Post[]        @relation("postDescription")
   PostTitle           Post[]        @relation("postTitle")
+  TeamDescription     Team[]        @relation("teamDescription")
+  TeamTitle           Team[]        @relation("teamTitle")
   Translations        Translation[]
-  GiveawayName        Giveaway[]    @relation("giveawayName")
 
   @@map("texts")
 }
@@ -56,7 +56,7 @@ model TeamMember {
   surname2 String @db.VarChar(50)
   alias    String @db.VarChar(20)
   team_id  BigInt
-  team     Team   @relation(fields: [team_id], references: [id])
+  Team     Team   @relation(fields: [team_id], references: [id])
 
   @@index([team_id], map: "team_members_team_id_fkey")
   @@map("team_members")
@@ -82,10 +82,11 @@ model Post {
   body_text_id  BigInt
   link          String
   PostCategory  PostCategory[]
+  Description   Text           @relation("postDescription", fields: [body_text_id], references: [id])
+  Title         Text           @relation("postTitle", fields: [title_text_id], references: [id])
 
-  Description Text @relation("postDescription", fields: [body_text_id], references: [id])
-  Title       Text @relation("postTitle", fields: [title_text_id], references: [id])
-
+  @@index([body_text_id], map: "posts_body_text_id_fkey")
+  @@index([title_text_id], map: "posts_title_text_id_fkey")
   @@map("posts")
 }
 
@@ -108,8 +109,8 @@ model TeamCategory {
   id          BigInt   @id @default(autoincrement())
   team_id     BigInt
   category_id BigInt
-  category    Category @relation(fields: [category_id], references: [id])
-  team        Team     @relation(fields: [team_id], references: [id])
+  Category    Category @relation(fields: [category_id], references: [id])
+  Team        Team     @relation(fields: [team_id], references: [id])
 
   @@index([category_id], map: "team_categories_category_id_fkey")
   @@index([team_id], map: "team_categories_team_id_fkey")
@@ -120,8 +121,8 @@ model EventCategory {
   id          BigInt   @id @default(autoincrement())
   event_id    BigInt
   category_id BigInt
-  category    Category @relation(fields: [category_id], references: [id])
-  event       Event    @relation(fields: [event_id], references: [id])
+  Category    Category @relation(fields: [category_id], references: [id])
+  Event       Event    @relation(fields: [event_id], references: [id])
 
   @@index([category_id], map: "event_categories_category_id_fkey")
   @@index([event_id], map: "event_categories_event_id_fkey")
@@ -132,8 +133,8 @@ model PostCategory {
   id          BigInt   @id @default(autoincrement())
   post_id     BigInt
   category_id BigInt
-  category    Category @relation(fields: [category_id], references: [id])
-  post        Post     @relation(fields: [post_id], references: [id])
+  Category    Category @relation(fields: [category_id], references: [id])
+  Post        Post     @relation(fields: [post_id], references: [id])
 
   @@index([category_id], map: "post_categories_category_id_fkey")
   @@index([post_id], map: "post_categories_post_id_fkey")
@@ -166,8 +167,8 @@ model UserRole {
   id      Int    @id @default(autoincrement())
   user_id String
   role_id Int
-  role    Role   @relation(fields: [role_id], references: [id])
-  user    User   @relation(fields: [user_id], references: [id])
+  Role    Role   @relation(fields: [role_id], references: [id])
+  User    User   @relation(fields: [user_id], references: [id])
 
   @@index([role_id], map: "user_roles_role_id_fkey")
   @@index([user_id], map: "user_roles_user_id_fkey")
@@ -176,13 +177,13 @@ model UserRole {
 
 model Giveaway {
   id            BigInt          @id @default(autoincrement())
-  name_id          BigInt
+  name_id       BigInt
   start_date    DateTime
   due_date      DateTime
-
-  Name          Text            @relation("giveawayName", fields: [name_id], references: [id])
   GiveawayAward GiveawayAward[]
+  Name          Text            @relation("giveawayName", fields: [name_id], references: [id])
 
+  @@index([name_id], map: "giveaways_name_id_fkey")
   @@map("giveaways")
 }
 
@@ -200,8 +201,8 @@ model GiveawayAward {
   id          BigInt   @id @default(autoincrement())
   giveaway_id BigInt
   award_id    BigInt
-  award       Award    @relation(fields: [award_id], references: [id])
-  giveaway    Giveaway @relation(fields: [giveaway_id], references: [id])
+  Award       Award    @relation(fields: [award_id], references: [id])
+  Giveaway    Giveaway @relation(fields: [giveaway_id], references: [id])
   Winner      Winner[]
 
   @@index([award_id], map: "giveaway_awards_award_id_fkey")
@@ -213,8 +214,8 @@ model Winner {
   id                BigInt        @id @default(autoincrement())
   giveaway_award_id BigInt
   user_id           String
-  giveaway_award    GiveawayAward @relation(fields: [giveaway_award_id], references: [id])
-  user              User          @relation(fields: [user_id], references: [id])
+  Giveaway_award    GiveawayAward @relation(fields: [giveaway_award_id], references: [id])
+  User              User          @relation(fields: [user_id], references: [id])
 
   @@index([giveaway_award_id], map: "winners_giveaway_award_id_fkey")
   @@index([user_id], map: "winners_user_id_fkey")

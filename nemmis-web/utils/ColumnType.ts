@@ -7,4 +7,5 @@ export enum ColumnType {
   Text,
   array,
   link,
+  team,
 }

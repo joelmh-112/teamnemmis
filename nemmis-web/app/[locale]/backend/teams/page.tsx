@@ -16,7 +16,7 @@ export default async function Index() {
   const columns: IColumnType[] = [
     { key: "id", title: "ID", type: ColumnType.bigint },
     { key: "Title", title: "Título", type: ColumnType.Text },
-    { key: "Description", title: "Descripción", type: ColumnType.Text },
+    { key: "Description", title: "Descripción", type: ColumnType.text },
     { key: "TeamMember", title: "Miembros", type: ColumnType.array },
     { key: "TeamCategory", title: "Categorías", type: ColumnType.array },
   ];
@@ -40,6 +40,5 @@ async function getData() {
       TeamMember: true,
       TeamCategory: true,
     },
-
   });
 }

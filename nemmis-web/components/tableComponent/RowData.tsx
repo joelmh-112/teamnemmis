@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { ColumnType } from "@/utils/ColumnType";
-import { Text, Translation } from "@prisma/client";
+import { Team, Text, Translation } from "@prisma/client";
 import Link from "next/link";
 
 interface Props {
@@ -14,6 +14,16 @@ function RowColumnData({ data, type }: Props) {
   useEffect(() => {
     setParsedData(parseData(data));
   }, [data]);
+
+  const handleText = (data: Text & { Translations?: Translation[] }) => {
+    return (
+      <>
+        {data.Translations?.map((t, index) => (
+          <p key={index}>{t.text}</p>
+        ))}
+      </>
+    );
+  };
 
   const parseData = (data: any) => {
     let parsedData: string | ReactNode = "";
@@ -36,15 +46,14 @@ function RowColumnData({ data, type }: Props) {
         }
         parsedData = "Invalid Date";
         break;
+      case ColumnType.team:
+        let text1 = data as Team & {
+          Title: Text & { Translations: Translation[] };
+        };
+        parsedData = handleText(text1.Title);
+        break;
       case ColumnType.Text:
-        let text = data as Text & { Translations?: Translation[] };
-        parsedData = (
-          <>
-            {text.Translations?.map((t, index) => (
-              <p key={index}>{t.text}</p>
-            ))}
-          </>
-        );
+        parsedData = handleText(data);
         break;
       case ColumnType.array:
         parsedData = data.length;
@@ -56,6 +65,7 @@ function RowColumnData({ data, type }: Props) {
             {data.length > 20 && "..."}
           </Link>
         );
+        break;
       default:
         parsedData = data ? data.toString() : "";
         break;
