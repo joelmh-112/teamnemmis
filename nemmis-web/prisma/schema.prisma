@@ -18,13 +18,16 @@ model Translation {
 }
 
 model Text {
-  id               BigInt        @id @default(autoincrement())
-  translation_id   BigInt
-  EventDescription Event[]       @relation("eventDescription")
-  EventTitle       Event[]       @relation("eventTitle")
-  TeamDescription  Team[]        @relation("teamDescription")
-  TeamTitle        Team[]        @relation("teamTitle")
-  Translations     Translation[]
+  id                  BigInt        @id @default(autoincrement())
+  translation_id      BigInt
+  awards              Award[]
+  EventDescription    Event[]       @relation("eventDescription")
+  EventTitle          Event[]       @relation("eventTitle")
+  TeamDescription     Team[]        @relation("teamDescription")
+  TeamTitle           Team[]        @relation("teamTitle")
+  CategoryDescription Category[]    @relation("categoryDescription")
+  CategoryTitle       Category[]    @relation("categoryTitle")
+  Translations        Translation[]
 
   @@map("texts")
 }
@@ -35,10 +38,11 @@ model Team {
   description_text_id BigInt
   TeamCategory        TeamCategory[]
   TeamMember          TeamMember[]
+  Description         Text           @relation("teamDescription", fields: [description_text_id], references: [id])
+  Title               Text           @relation("teamTitle", fields: [title_text_id], references: [id])
 
-  Description Text @relation("teamDescription", fields: [description_text_id], references: [id])
-  Title       Text @relation("teamTitle", fields: [title_text_id], references: [id])
-
+  @@index([description_text_id], map: "teams_description_text_id_fkey")
+  @@index([title_text_id], map: "teams_title_text_id_fkey")
   @@map("teams")
 }
 
@@ -80,12 +84,16 @@ model Post {
 }
 
 model Category {
-  id                  BigInt          @id @default(autoincrement())
+  id                  BigInt @id @default(autoincrement())
   title_text_id       BigInt
   description_text_id BigInt
-  EventCategory       EventCategory[]
-  PostCategory        PostCategory[]
-  TeamCategory        TeamCategory[]
+
+  Description Text @relation("categoryDescription", fields: [description_text_id], references: [id])
+  Title       Text @relation("categoryTitle", fields: [title_text_id], references: [id])
+
+  EventCategory EventCategory[]
+  PostCategory  PostCategory[]
+  TeamCategory  TeamCategory[]
 
   @@map("categories")
 }
@@ -172,9 +180,11 @@ model Giveaway {
 
 model Award {
   id            BigInt          @id @default(autoincrement())
-  name          String          @db.VarChar(255)
+  name_id       BigInt
+  texts         Text            @relation(fields: [name_id], references: [id])
   GiveawayAward GiveawayAward[]
 
+  @@index([name_id], map: "awards_name_id_fkey")
   @@map("awards")
 }
 
