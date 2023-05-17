@@ -12,7 +12,7 @@ export default async function Index() {
     { key: "Name", title: "Nombre", type: ColumnType.Text },
     { key: "start_date", title: "Inicio", type: ColumnType.date },
     { key: "due_date", title: "Fin", type: ColumnType.date },
-    { key:"GiveawayAward", title: "Sorteos", type: ColumnType.array },
+    { key:"GiveawayAward", title: "Premios", type: ColumnType.array },
 
   ];
   return <Table columns={columns} data={teams}></Table>;
