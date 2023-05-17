@@ -1,8 +1,7 @@
 import { IColumnType, Table } from "@/components/tableComponent/Table";
-import { PrismaClient, language_code } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 import "../../../css/table.css";
-import { useLocale } from "next-intl";
 import { ColumnType } from "@/utils/ColumnType";
 
 export default async function Index() {
@@ -12,7 +11,7 @@ export default async function Index() {
     { key: "id", title: "ID", type: ColumnType.bigint },
     { key: "Title", title: "Título", type: ColumnType.Text },
     { key: "Description", title: "Descripción", type: ColumnType.Text },
-    { key: "Link", title: "Enlace", type: ColumnType.Text },
+    { key: "Link", title: "Enlace", type: ColumnType.link },
     { key: "PostCategories", title: "PostCategories", type: ColumnType.Text },
   ];
   return <Table columns={columns} data={posts}></Table>;
@@ -21,7 +20,7 @@ export default async function Index() {
 async function getData() {
   const prisma = new PrismaClient();
 
-  return await prisma.event.findMany({
+  return await prisma.post.findMany({
     include: {
       Title: {
         include: {
@@ -33,6 +32,7 @@ async function getData() {
           Translations: true,
         },
       },
+      PostCategory: true,
     },
   });
 }
