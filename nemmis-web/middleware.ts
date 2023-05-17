@@ -20,7 +20,7 @@ export default withAuth(
     callbacks: {
       authorized: async ({ req, token }:{req:NextRequest,token:any}) => {
         if (req.nextUrl.pathname.startsWith("/backend")) {
-          if (token.webUser.UserRoles && token.webUser.UserRoles.find(({ role_id }:{role_id:number}) => role_id == process.env.ADMIN_ROLE_ID) ? true : false) {
+          if (token?.webUser?.UserRoles && token.webUser.UserRoles.find(({ role_id }:{role_id:number}) => role_id == process.env.ADMIN_ROLE_ID) ? true : false) {
             return true;
           }else{
             return false;
