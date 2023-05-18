@@ -1,9 +1,9 @@
-import { IColumnType, Table } from "@/components/backend/tableComponent/Table";
+import { IColumnType, Table } from "@components/backend/tableComponent/Table";
 import { PrismaClient, language_code } from "@prisma/client";
 
 import "../../../css/table.css";
 import { useLocale } from "next-intl";
-import { ColumnType } from "@/utils/ColumnType";
+import { ColumnType } from "@utils/ColumnType";
 
 export default async function Index() {
   const events = await getData(useLocale());

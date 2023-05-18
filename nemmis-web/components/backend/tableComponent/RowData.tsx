@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { ColumnType } from "@/utils/ColumnType";
+import { ColumnType } from "@utils/ColumnType";
 import { Team, Text, Translation } from "@prisma/client";
 import Link from "next/link";
 

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import RowColumnData from "./RowData";
-import { ColumnType } from "@/utils/ColumnType";
+import { ColumnType } from "@utils/ColumnType";
 
 
 export interface IColumnType {

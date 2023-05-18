@@ -3,7 +3,7 @@ import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "next-auth/providers/google";
 import TwitchProvider from "next-auth/providers/twitch";
-import prisma from "@/utils/prisma";
+import prisma from "@utils/prisma";
 
 const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,

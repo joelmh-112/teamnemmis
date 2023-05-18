@@ -1,8 +1,8 @@
-import { IColumnType, Table } from "@/components/backend/tableComponent/Table";
+import { IColumnType, Table } from "@components/backend/tableComponent/Table";
 import { PrismaClient } from "@prisma/client";
 
 import "../../../css/table.css";
-import { ColumnType } from "@/utils/ColumnType";
+import { ColumnType } from "@utils/ColumnType";
 
 export default async function Index() {
   const categories = await getData();

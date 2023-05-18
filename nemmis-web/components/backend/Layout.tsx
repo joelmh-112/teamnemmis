@@ -1,13 +1,21 @@
-import { ReactNode } from "react";
+"use client"
+import { ReactNode, useState } from "react";
 import Sidebar from "./Sidebar";
 import Menu from "./Menu";
 
 function Layout({ children }: { children: ReactNode }) {
+
+  const [open, setOpen] = useState(false);
+
+  const handleOnClickToggle = () => {
+    setOpen(!open);
+  }
+
   return (
     <main className="flex">
-      <Sidebar />
+      <Sidebar open={open}/>
       <div className="w-full">
-        <Menu />
+        <Menu onClickToggle={handleOnClickToggle}/>
         {children}
       </div>
     </main>

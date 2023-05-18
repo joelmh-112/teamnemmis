@@ -1,4 +1,4 @@
-import { NextAuthProvider } from "@/components/NextAuthProvider";
+import { NextAuthProvider } from "@components/NextAuthProvider";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import './../globals.css'
