@@ -1,6 +1,7 @@
 "use client";
 import { IColumnType, Table } from "@/components/backend/tableComponent/Table";
 import { ActionOptions } from "@/utils/TableAction";
+import { headers } from "@/utils/headers";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -16,12 +17,22 @@ function ModelTemplate(props: Props) {
   const [id, setId] = useState<number>();
 
   useEffect(() => {
-    if (action === ActionOptions.delete) {
-      console.log("delete", id);
-    } else if (action === ActionOptions.edit) {
-      console.log("edit", id);
-    }
-    console.log("puta inesperado");
+    (async () => {
+      if (action === ActionOptions.delete) {
+        console.log("delete", id);
+        const res = await fetch("/api/prisma/award/delete", {
+          method: "POST",
+          headers: { ...headers },
+          body: JSON.stringify({ id: id?.toString() }),
+        });
+        console.log(await res.json());
+      } else if (action === ActionOptions.edit) {
+        fetch("/api/prisma/award/delete", {
+          body: JSON.stringify({ data: data.find((e) => e.id === id) }),
+        });
+      }
+      console.log("puta inesperado");
+    })();
   }, [action, id]);
 
   const onClick = (action: ActionOptions | undefined, id: number) => {
