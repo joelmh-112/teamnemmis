@@ -1,12 +1,16 @@
 import prisma from "@/utils/prisma";
-import { Award } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 
-const handler = (data: any) => {
-  console.log(typeof data);
-
-  prisma.award.update({ where: { id: data.id }, data });
-
-  return "something";
+const handler = async (req: NextRequest) => {
+  const { data } = await req.json();
+  return await prisma.award
+    .update({ where: { id: BigInt(data.id) }, data })
+    .then((res) => {
+      return NextResponse.json({ err: false, message: res });
+    })
+    .catch((err) => {
+      return NextResponse.json({ err: true, message: err });
+    });
 };
 
-export { handler as GET, handler as POST };
+export { handler as POST };

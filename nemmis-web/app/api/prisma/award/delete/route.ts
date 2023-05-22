@@ -11,8 +11,6 @@ const handler = async (req: NextRequest) => {
     .catch((err) => {
       return NextResponse.json({ err: true, message: err });
     });
-
-  /* THIS IS FUNNY :d ONLY TOOK 20 HOURS :d */
 };
 
 export { handler as POST };
