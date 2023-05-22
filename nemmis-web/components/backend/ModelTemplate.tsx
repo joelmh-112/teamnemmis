@@ -1,49 +1,65 @@
 "use client";
 import { IColumnType, Table } from "@/components/backend/tableComponent/Table";
 import { ActionOptions } from "@/utils/TableAction";
+import { Type } from "@/utils/Type";
 import { headers } from "@/utils/headers";
 import { useEffect, useState } from "react";
+import DynamicForm from "./DynamicForm";
+import Button from "./Button";
+import {  useRouter } from "next/navigation";
 
 interface Props {
   title: string;
+  type: Type;
   columns: IColumnType[];
   data: any[];
 }
 
 function ModelTemplate(props: Props) {
-  const { title, columns, data } = props;
+  const { title, columns, data, type} = props;
 
   const [action, setAction] = useState<ActionOptions>();
-  const [id, setId] = useState<number>();
+  const [row, setRow] = useState<any>()
+  const [formOpen, setFormOpen] = useState<boolean>(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
       if (action === ActionOptions.delete) {
-        console.log("delete", id);
+        console.log("delete", row.id);
         const res = await fetch("/api/prisma/award/delete", {
           method: "POST",
           headers: { ...headers },
-          body: JSON.stringify({ id: id?.toString() }),
+          body: JSON.stringify({ id: row.id?.toString() }),
         });
         console.log(await res.json());
       } else if (action === ActionOptions.edit) {
-        fetch("/api/prisma/award/delete", {
-          body: JSON.stringify({ data: data.find((e) => e.id === id) }),
-        });
+        setFormOpen(true);
       }
       console.log("puta inesperado");
     })();
-  }, [action, id]);
+  }, [action, row]);
 
-  const onClick = (action: ActionOptions | undefined, id: number) => {
-    setId(id);
+  
+
+  const onClick = (action: ActionOptions | undefined, row:any) => {
+    setRow(row);
     setAction(action);
   };
+
+
+  const handleOnSubmit = () =>{
+    if(window !== undefined){
+      alert("refresh");
+      location.reload();
+    }
+  }
 
   return (
     <>
       <h1>{title}</h1>
-      <Table columns={columns} data={data} onClick={onClick}></Table>
+      {formOpen ? <DynamicForm onSubmit={handleOnSubmit} data={row} columns={columns} type={type} /> : <Table columns={columns} data={data} onClick={onClick}/>}
     </>
   );
 }

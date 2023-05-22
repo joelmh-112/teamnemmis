@@ -8,4 +8,6 @@ export enum ColumnType {
   array,
   link,
   team,
+  email,
+  boolean,
 }

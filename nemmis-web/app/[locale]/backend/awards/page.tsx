@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import "../../../css/table.css";
 import { ColumnType } from "@/utils/ColumnType";
 import ModelTemplate from "@/components/backend/ModelTemplate";
+import { Type } from "@/utils/Type";
 
 export default async function Index() {
   const teams = await getData();
@@ -14,7 +15,7 @@ export default async function Index() {
     { key: "GiveawayAward", title: "Sorteos", type: ColumnType.array },
   ];
 
-  return <ModelTemplate title="Teams" columns={columns} data={teams} />;
+  return <ModelTemplate title="Teams" columns={columns} data={teams} type={Type.award}/>;
 }
 
 async function getData() {

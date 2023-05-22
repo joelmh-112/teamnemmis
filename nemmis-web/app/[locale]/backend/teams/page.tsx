@@ -5,6 +5,8 @@ import "../../../css/table.css";
 import { ColumnType } from "@/utils/ColumnType";
 import Layout from "@/components/backend/Layout";
 import Show from "@/components/backend/ModelTemplate";
+import ModelTemplate from "@/components/backend/ModelTemplate";
+import { Type } from "@/utils/Type";
 
 interface MyTeams {
   id: string;
@@ -24,9 +26,7 @@ export default async function Index() {
   ];
   return (
     <Layout>
-      <Show title="Equipos">
-        <Table columns={columns} data={teams}></Table>
-      </Show>
+      <ModelTemplate title="Teams" columns={columns} data={teams} type={Type.team}/>;
     </Layout>
   );
 }

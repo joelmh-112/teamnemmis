@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const handler = async (req: NextRequest) => {
   const { data } = await req.json();
 
-  return await updateTranslations(...data.text, ...data.description)
+  return await updateTranslations(...data.Title, ...data.Description)
     .then((_) => {
       return NextResponse.json({ err: false, message: "ok" });
     })

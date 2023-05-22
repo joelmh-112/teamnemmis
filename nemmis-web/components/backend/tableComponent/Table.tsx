@@ -15,7 +15,7 @@ export interface IColumnType {
 export interface Props {
   columns: IColumnType[];
   data: any[];
-  onClick: (action: ActionOptions | undefined, row: number) => void;
+  onClick: (action: ActionOptions | undefined, row: any) => void;
 }
 
 export function Table({ data, columns, onClick }: Props) {
@@ -30,7 +30,7 @@ export function Table({ data, columns, onClick }: Props) {
     <table>
       <thead>
         <tr>
-          {columns.map((column) => (
+          {columns?.map((column) => (
             <th key={column.key} className="capitalize">
               {column.title}
             </th>
@@ -52,7 +52,7 @@ export function Table({ data, columns, onClick }: Props) {
               <Button
                 className={"bg-green-600"}
                 onClick={() => {
-                  handleOnClickButton(ActionOptions.edit, row.id);
+                  handleOnClickButton(ActionOptions.edit, row);
                 }}
               >
                 <PencilSquareIcon className="h-6 w-6" />
@@ -60,7 +60,7 @@ export function Table({ data, columns, onClick }: Props) {
               <Button
                 className={"bg-red-600"}
                 onClick={() => {
-                  handleOnClickButton(ActionOptions.delete, row.id);
+                  handleOnClickButton(ActionOptions.delete, row);
                 }}
               >
                 <TrashIcon className="h-6 w-6" />
